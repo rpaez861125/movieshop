@@ -24,6 +24,7 @@
             <v-spacer></v-spacer>
         
                 <v-text-field
+                    v-model="search"
                     hide-details 
                     label="Filled" 
                     placeholder="Search" 
@@ -33,16 +34,32 @@
                     single-line 
                     prepend-icon="search" 
                     class="shrink mx-4"
+                    @keyup.enter="sendData"
                 ></v-text-field>                
                 <v-btn icon>
                     <v-icon>shopping_cart</v-icon>
-                </v-btn>
+                </v-btn>                
         </v-app-bar>
+        
     </v-container>
 </template>
 <script>
+import {mapMutations} from 'vuex'
 export default {
-    
+    data() {
+        return {  
+            search: '',        
+        }
+    },
+    computed: {
+       
+    },
+    methods: {
+        ...mapMutations(['dataSearch']),
+        sendData(){
+            this.dataSearch(this.search)
+        }
+    }
 }
 </script>
 
