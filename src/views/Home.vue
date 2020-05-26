@@ -13,29 +13,18 @@
           <v-img
             class="white--text align-end"
             height="200px"
+            @click="openDialog(item)"
             src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
           ></v-img>
           <v-card-text class="text-center py-0">
             <div>
               <span class="red--text">
                 {{item.title}}
-              </span>
-              <!-- <span class="black--text">(1990)</span>               -->
-            </div>
-            <!-- <div class="text--disabled">
-              <span>
-                List Price:
-              </span>
-              <s>$120</s>
-            </div>-->
+              </span>            
+            </div>            
             <div> 
               <strong>Price: ${{item.price}}</strong>
             </div>
-            <!-- <div class="text--disabled">
-              <span>
-                You Save: $ 20 (10%)
-              </span>
-            </div> -->
           </v-card-text>         
           <v-card-actions>
             <v-btn
@@ -48,13 +37,54 @@
         </v-card>
       </v-col>
     </v-row>  
-    <div class="text-center">
-    <v-pagination
-      v-model="page"
-      :length="pages"
-      :total-visible="8"
-    ></v-pagination>
-  </div>   
+    <div class="text-center" v-if="movieData.length">
+      <v-pagination
+        v-model="page"
+        :length="pages"
+        :total-visible="8"
+      ></v-pagination>
+    </div> 
+         <!-- Dialog to show each item  -->
+    <v-dialog v-model="dialog" persistent max-width="500">         
+      <v-card>
+        <v-img
+            class="white--text align-end"
+            height="200px"
+            src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
+          ></v-img>        
+          <v-card-text class="text-center py-0">
+              <div>
+                <span class="red--text">
+                  {{dialogItem.title}}
+                </span>            
+              </div> 
+              <div class="mt-1">
+                <span class="black--text">
+                    {{dialogItem.description}}
+                </span>
+              </div>           
+              <div class="mt-1"> 
+                <strong>Price: ${{dialogItem.price}}</strong>
+              </div>
+            </v-card-text>
+        <v-card-actions>          
+          <v-btn
+            color="error"
+            @click="dialog = false"
+          >
+              add to cart
+            </v-btn>
+          <v-spacer></v-spacer>
+          <v-btn 
+            dark
+            color="blue lighten-1" 
+            @click="dialog = false"
+          >
+            Close
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog> 
   </v-container>
 </template>
 
@@ -69,6 +99,8 @@ export default {
       movieData:[],      
       page:1,
       pages:1,
+      dialog: false,
+      dialogItem:[],
 
     }
   },
@@ -78,13 +110,16 @@ export default {
         let dataMovie = await axios.get(`static/MOCK_DATA.json`)
          this.movieData = dataMovie.data
          this.pages = dataMovie.data.length / 20
-         //console.log(this.movieData)
-       
+               
       } catch (error) {
         console.log(error)
       }finally{
 
       }
+    },
+    openDialog(item){
+      this.dialog = true     
+      this.dialogItem = item
     }
 
   },
