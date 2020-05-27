@@ -24,12 +24,18 @@
             </div>            
             <div> 
               <strong>Price: ${{item.price}}</strong>
-            </div>
+            </div> 
+            <div> 
+              <v-checkbox                
+                label="QTY"                
+              ></v-checkbox>            
+            </div>           
           </v-card-text>         
           <v-card-actions>
             <v-btn
             block
             color="error"
+            @click="addCart(item)"
             >
               add to cart
             </v-btn>
@@ -70,7 +76,7 @@
         <v-card-actions>          
           <v-btn
             color="error"
-            @click="dialog = false"
+            @click="addCart(dialogItem)"
           >
               add to cart
             </v-btn>
@@ -91,6 +97,7 @@
 <script>
 import axios from 'axios'
 import {mapState} from 'vuex'
+import {mapMutations} from 'vuex'
 
 export default {
   name: 'Home',
@@ -98,13 +105,14 @@ export default {
     return {
       movieData:[],      
       page:1,
-      pages:1,
+      pages:1,     
       dialog: false,
       dialogItem:[],
 
     }
   },
   methods: {
+    ...mapMutations(['addCart']),
     async getMovies(){
       try {
         let dataMovie = await axios.get(`static/MOCK_DATA.json`)
@@ -120,8 +128,8 @@ export default {
     openDialog(item){
       this.dialog = true     
       this.dialogItem = item
-    }
-
+    },
+    
   },
   computed: {
      ...mapState(['search']),
