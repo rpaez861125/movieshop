@@ -8,24 +8,14 @@ Vue.use(VueRouter)
   {
     path: '/',
     name: 'Home',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Home.vue')
+    component: () => import('../views/Home.vue')
   },
    {
      path: '/cart',
      name: 'Cart',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-     component: () => import(/* webpackChunkName: "about" */ '../views/Cart.vue')
+     component: () => import('../views/Cart.vue')
    },
-   {
-    path: '/prueba',
-    name: 'Prueba',
-       // route level code-splitting
-       // this generates a separate chunk (about.[hash].js) for this route
-       // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/Prueba.vue')
-  }
+  
 ]
 
 const router = new VueRouter({

@@ -4,40 +4,36 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-  state: {
-      search: '',
-      show: false,
-      cart:[],
+  state: {     
+      show: false,      
+      items: [],
       totalPrice: 0,
   },
   mutations: {
-    dataSearch(state, data){
-      state.search = data
-    },
+   
     addCart(state, data){
-      state.cart.push(data)  
-      state.totalPrice = state.cart.reduce((a, b) => a.price + b.price)
-      if(state.cart.length != 0){
-        state.show = true
-      }    
-
+      state.items.push(data) 
+      state.totalPrice =  state.items.reduce((sum, value) => (typeof value.price == "number" ? sum + value.price : sum), 0)
+    },
+    addCartSelected(state, data){
+      if(state.items.length == 0){
+        state.items = data       
+      }else{
+        state.items = state.items.concat(data)       
+      }
+      state.totalPrice =  state.items.reduce((sum, value) => (typeof value.price == "number" ? sum + value.price : sum), 0)
     },
     removeCart(state, index){
-      state.cart.splice(index, 1)
-      state.totalPrice = state.cart.reduce((a, b) => a.price + b.price)
-      if(state.cart.length == 0){
-        state.show = false
-      }  
+
+      state.items.splice(index, 1)      
+      state.totalPrice =  state.items.reduce((sum, value) => (typeof value.price == "number" ? sum + value.price : sum), 0)      
+     
     },
-    // calcTotalPrice(state){      
-    //   state.totalPrice = state.cart.reduce((a, b) => a.price + b.price)     
-    // }
+  },
+  computed: {    
   },
   actions: {
   },
   modules: {
-  }, 
-  // updated() {
-  //   this.calcTotalPrice()
-  // },
+  },
 })

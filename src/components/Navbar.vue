@@ -23,33 +23,14 @@
             <v-toolbar-title > 
                 Movies Shop 
             </v-toolbar-title>
-            <v-spacer></v-spacer>
-        
-                <v-text-field
-                    v-model="search"
-                    hide-details 
-                    label="Filled" 
-                    placeholder="Search" 
-                    filled 
-                    rounded 
-                    dense 
-                    single-line 
-                    prepend-icon="search" 
-                    class="shrink mx-4"
-                    @keyup.enter="sendData"
-                ></v-text-field>                
-                <v-btn 
-                icon
-                :to="{name: 'Prueba'}"
-                >                 
-                    <v-icon>table_chart</v-icon>                    
-                </v-btn>                
+            <v-spacer></v-spacer>                 
+                             
                 <v-btn 
                 icon
                 :to="{name: 'Cart'}"
                 >
                     <v-badge
-                    :content="cart.length"
+                    :content="items.length"
                     :value="show"    
                     color="error"                                          
                     overlap                    
@@ -66,18 +47,25 @@ import {mapMutations, mapState} from 'vuex'
 export default {
     data() {
         return {  
-            search: '',                
+            show: false,            
         }
     },
     computed: {
-       ...mapState(['cart', 'totalPrice', 'show'])
+       ...mapState(['items', 'totalPrice'])
     },
     methods: {
-        ...mapMutations(['dataSearch']),
-        sendData(){
-            this.dataSearch(this.search)
-        }
-    }
+       showBadge(){
+           if(this.items.length != 0){
+               this.show = true
+           }else{
+                this.show = false
+           }
+
+       }
+    },
+    updated() {
+       this.showBadge()
+    },
 }
 </script>
 
