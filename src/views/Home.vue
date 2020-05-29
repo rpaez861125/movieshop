@@ -24,15 +24,7 @@
             hide-details            
             prepend-inner-icon="search"
             label="Search"
-          ></v-text-field>
-             <v-btn 
-            class="ma-2"   
-            color="error"            
-            v-if="selected.length"
-            @click="addCartSelected(selected)"
-            >
-               <v-icon left>add</v-icon> Add
-            </v-btn>
+          ></v-text-field>            
         </v-toolbar>
       </template>
 
@@ -120,13 +112,28 @@
                 v-model="page"
                 color="blue darken-3"
                 :length="numberOfPages"
-                :total-visible="10"
+                :total-visible="10"                
             ></v-pagination>
         </div> 
         </v-row>
         </v-container>
       </template>
     </v-data-iterator>
+
+    <v-fab-transition>
+        <v-btn
+        v-show="selected.length"
+        color="error"
+        dark
+        fixed
+        bottom
+        right
+        fab        
+        @click="emptySelected(selected)"
+        >
+         <v-icon>add</v-icon>
+        </v-btn>
+    </v-fab-transition>
 
     <!-- Dialog to show each item  -->
     <v-dialog v-model="dialog" persistent max-width="500">         
@@ -187,14 +194,14 @@ import {mapState, mapMutations} from 'vuex'
         sortBy: 'title', 
         items:[], 
         dialog: false,
-        dialogItem:[],  
-        selected:[],    
+        dialogItem:[], 
+        selected:[],          
       }
     },
     props:{
 
     },
-    computed: {
+    computed: {      
         numberOfPages () {
             return Math.ceil(this.items.length / this.itemsPerPage)
       },     
@@ -214,9 +221,16 @@ import {mapState, mapMutations} from 'vuex'
       updateItemsPerPage (number) {
         this.itemsPerPage = number
     },
+    prueba(){
+      console.log(this.page)
+    },
       openDialog(item){
       this.dialog = true     
       this.dialogItem = item
+    },
+    emptySelected(data){
+      this.addCartSelected(data)
+      this.selected = []
     }        
     },
     created() {

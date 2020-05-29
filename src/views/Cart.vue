@@ -27,18 +27,11 @@
             prepend-inner-icon="search"
             label="Search"
           ></v-text-field>
-             <v-spacer></v-spacer>
-            <v-btn 
-            class="ma-2"   
-            color="error"
-            :to="{name: 'Home'}"
-            v-if="!items.length"
-            >
-               <v-icon left>add</v-icon> Add
-            </v-btn>
-            <v-toolbar-title v-else> 
+        <v-spacer></v-spacer>
+         
+            <v-toolbar-title v-show="items.length"> 
                 Subtotal ( {{ items.length}} Items ): ${{ totalPrice }} 
-            </v-toolbar-title>
+            </v-toolbar-title>           
         </v-toolbar>
       </template>
 
@@ -71,7 +64,9 @@
                     </div> 
                     <div> 
                     <v-checkbox                
-                        label="QTY"                
+                        label="QTY"
+                        v-model="selected"   
+                        :value="item"                
                     ></v-checkbox>            
                     </div>           
                 </v-card-text>         
@@ -132,6 +127,35 @@
       </template> 
     </v-data-iterator>
 
+    <v-fab-transition>
+        <v-btn
+        v-show="!items.length"
+        :to="{name: 'Home'}"
+        color="error"
+        dark
+        fixed
+        bottom
+        right
+        fab
+        >
+            <v-icon>add</v-icon>
+        </v-btn>
+    </v-fab-transition>
+    <v-fab-transition>
+        <v-btn
+        v-show="selected.length"
+        color="error"
+        dark
+        fixed
+        bottom
+        right
+        fab
+        @click="emptySelected(selected)"
+        >
+            <v-icon>delete</v-icon>
+        </v-btn>
+    </v-fab-transition>
+
     <!-- Dialog to show each item  -->
     <v-dialog v-model="dialog" persistent max-width="500">         
       <v-card>
@@ -155,14 +179,8 @@
                 <strong>Price: ${{dialogItem.price}}</strong>
               </div>
             </v-card-text>
-            <v-card-actions>          
-            <v-btn
-            color="error"
-            @click="addCart(dialogItem)"
-            >
-                add to cart
-            </v-btn>
-            <v-spacer></v-spacer>
+            <v-card-actions> 
+        <v-spacer></v-spacer>
             <v-btn 
                 dark
                 color="blue lighten-1" 
@@ -191,7 +209,8 @@ import {mapState, mapMutations} from 'vuex'
         sortBy: 'title',         
         dialog: false,
         dialogItem:[], 
-        text: 'You have no items in the cart.',     
+        text: 'You have no items in the cart.',  
+        selected:[],           
       }
     },
     computed: {
@@ -201,14 +220,18 @@ import {mapState, mapMutations} from 'vuex'
       },     
     },
     methods: {
-        ...mapMutations(['addCart', 'removeCart']),
+        ...mapMutations(['addCart', 'removeCart', 'removeCartSelected']),
         updateItemsPerPage (number) {
         this.itemsPerPage = number
     },
       openDialog(item){
       this.dialog = true     
       this.dialogItem = item
-    }        
+    },
+     emptySelected(data){
+      this.removeCartSelected(data)
+      this.selected = []
+    }         
     },
   }
 </script>
