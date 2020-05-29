@@ -7,7 +7,11 @@ export default new Vuex.Store({
   state: {     
       show: false,      
       items: [],
-      totalPrice: 0,    
+      totalPrice: 0, 
+      loadingAlert:{
+        title:'',
+        stad: false,       
+      }   
        
   },
   mutations: {
@@ -38,6 +42,14 @@ export default new Vuex.Store({
         }        
       }
       state.totalPrice =  state.items.reduce((sum, value) => (typeof value.price == "number" ? sum + value.price : sum), 0)      
+    },
+    showAlert(state, payLoad){
+      state.loadingAlert.title = payLoad.title
+      state.loadingAlert.stat = true
+    },
+
+    hideAlert(state){
+      state.loadingAlert.stad = false
     }
   },
   computed: {    

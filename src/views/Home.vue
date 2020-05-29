@@ -48,15 +48,15 @@
                 ></v-img>
                 <v-card-text class="text-center py-0">
                     <div>
-                    <span class="red--text">
-                        {{item.title}}
-                    </span>            
-                    </div>            
-                    <div> 
-                    <strong>Price: ${{item.price}}</strong>
-                    </div> 
-                    <div> 
-                    <v-checkbox                
+																					<span class="red--text">
+																							{{item.title}}
+																					</span>            
+																			</div>            
+																			<div> 
+																				<strong>Price: ${{item.price}}</strong>
+																			</div> 
+																			<div> 
+																			<v-checkbox                
                         label="QTY"
                         v-model="selected"   
                         :value="item"             
@@ -65,11 +65,20 @@
                 </v-card-text>         
                 <v-card-actions>
                     <v-btn
-                    block
-                    color="error"
-                    @click="addCart(item)"
+																					block
+																					color="error"
+																					@click="chageBtn(item)"
+																					v-show="show"
                     >
                     add to cart
+                    </v-btn>
+																				<v-btn
+																					block
+																					color="error"
+																					v-show="!show"
+																					:to="{name: 'Cart'}"
+                    >
+                    on the cart
                     </v-btn>
                 </v-card-actions>
             </v-card>
@@ -195,7 +204,8 @@ import {mapState, mapMutations} from 'vuex'
         items:[], 
         dialog: false,
         dialogItem:[], 
-        selected:[],          
+								selected:[],  
+								show: true,        
       }
     },
     props:{
@@ -207,13 +217,13 @@ import {mapState, mapMutations} from 'vuex'
       },     
     },
     methods: {
-        ...mapMutations(['addCart', 'addCartSelected']),
+        ...mapMutations(['addCart', 'addCartSelected', 'showAlert']),
         async getMovies(){
         try {
             let dataMovie = await axios.get(`static/MOCK_DATA.json`)
             this.items = dataMovie.data                
         } catch (error) {
-            console.log(error)
+            this.showAlert({title: error})
         }finally{
 
         }
@@ -231,7 +241,11 @@ import {mapState, mapMutations} from 'vuex'
     emptySelected(data){
       this.addCartSelected(data)
       this.selected = []
-    }        
+				},
+				chageBtn(item){
+						this.show = false
+						this.addCart(item)
+				}        
     },
     created() {
         this.getMovies()
